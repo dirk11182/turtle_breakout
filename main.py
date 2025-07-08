@@ -28,6 +28,8 @@ class Sprite(object):
 class HPadlle(Sprite):
     def __init__(self):        
         super().__init__(pos=(0, -200), shape=(6,0.5), color="white")
+        # speed in x-direction speed <0: left; speed>0:right
+        self.speed = 0
         
     def move(self, dx):
         self.pos[0] += dx        
@@ -36,13 +38,22 @@ class HPadlle(Sprite):
         if(self.pos[0]>(400-self.shape[0]*10)):
             self.pos[0] = 400-self.shape[0]*10
         self.rect["pos"] = self.pos
-        self.image.goto(self.pos)            
+        self.image.goto(self.pos)
     
     def move_left(self):
         self.move(-20)
 
     def move_right(self):
         self.move(20)
+    
+    def set_speed(self, s):
+        self.speed = s
+    
+    def get_speed(self):
+        return(self.speed)
+    
+    def update(self, dt):
+        pass
 
 class Brick(Sprite):
     pass
@@ -77,13 +88,22 @@ wn.onkeypress(my_close, "q")
 wn.onkeypress(paddle.move_left, "Left")
 wn.onkeypress(paddle.move_right, "Right")
 
+t0 = time.time()
+dt = 0
 # game loop ####################################################
 while(running):
     # timing
     time.sleep(0.05)
+    dt = (t0-time.time())*1000
     
     # update
-    wn.update()    
+    paddle.update(dt)
+    s1.update(dt)
+
+    wn.update()
+    
+    # time management
+    t0 = time.time()    
   
 turtle.bye()
     
